@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yiyu Zhang — MIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg:    #fdf8f2;
+  --bg2:   #f5ede0;
+  --bg3:   #eee4d5;
+  --ink:   #2c2118;
+  --ink2:  #4a3d2e;
+  --stone: #9a8878;
+  --terra: #c07b48;
+  --lav:   #8e85b0;
+  --sea:   #6a9dae;
+  --sage:  #7a9b7c;
+  --line:  #e4d9cc;
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans:  'Outfit', sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 1rem;
+  line-height: 1.75;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+#cur {
+  position: fixed; width: 7px; height: 7px;
+  background: var(--terra); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform .15s;
+}
+#cur-ring {
+  position: fixed; width: 30px; height: 30px;
+  border: 1.5px solid rgba(192,123,72,.3); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: left .1s ease-out, top .1s ease-out, transform .25s;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 30px 64px;
+  transition: padding .3s, background .3s, box-shadow .3s;
+}
+nav.stuck {
+  padding: 18px 64px;
+  background: rgba(253,248,242,.95);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 1px 0 var(--line);
+}
+.nav-name {
+  font-family: var(--serif); font-size: 1.05rem;
+  color: var(--ink); text-decoration: none; letter-spacing: .02em;
+}
+.nav-links { display: flex; gap: 38px; list-style: none; }
+.nav-links a {
+  font-size: .68rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--stone); text-decoration: none;
+  position: relative; padding-bottom: 3px;
+  transition: color .25s;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 0; height: 1.5px; background: var(--terra);
+  transition: width .3s;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after { width: 100%; }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: grid; grid-template-columns: 1fr 460px;
+  align-items: end;
+  padding: 0 64px 80px;
+  border-bottom: 1px solid var(--line);
+  position: relative; overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 40%, rgba(142,133,176,.08) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 20% 80%, rgba(192,123,72,.07) 0%, transparent 65%),
+    var(--bg);
+}
+.hero-content { padding-top: 140px; }
+.hero-label {
+  font-size: .65rem; letter-spacing: .35em; text-transform: uppercase;
+  color: var(--terra); margin-bottom: 28px;
+  display: flex; align-items: center; gap: 14px;
+}
+.hero-label::before { content: ''; width: 36px; height: 1px; background: var(--terra); }
+.hero-h1 {
+  font-family: var(--serif);
+  font-size: clamp(52px, 6.5vw, 100px);
+  font-weight: 400; line-height: .95;
+  letter-spacing: -.02em; color: var(--ink);
+  margin-bottom: 16px;
+}
+.hero-h1 em { font-style: italic; color: var(--terra); }
+.hero-mia {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(20px, 2.2vw, 32px); font-weight: 400;
+  color: var(--stone); letter-spacing: .08em;
+  margin-bottom: 32px;
+}
+.hero-mia {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(18px, 2vw, 28px); font-weight: 400;
+  color: var(--stone); letter-spacing: .06em;
+  margin-bottom: 32px; display: block;
+}
+.hero-tagline {
+  font-size: .95rem; color: var(--stone);
+  max-width: 440px; line-height: 1.9; margin-bottom: 48px;
+}
+.hero-dots { display: flex; gap: 8px; margin-bottom: 36px; }
+.hero-dots span { width: 7px; height: 7px; border-radius: 50%; }
+.hero-dots span:nth-child(1) { background: var(--terra); }
+.hero-dots span:nth-child(2) { background: var(--lav); }
+.hero-dots span:nth-child(3) { background: var(--sea); }
+.hero-btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-size: .68rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--bg); background: var(--ink);
+  text-decoration: none; padding: 15px 32px;
+  transition: background .3s, gap .25s;
+}
+.hero-btn:hover { background: var(--terra); gap: 20px; }
+.hero-btn span { font-size: .85rem; }
+
+.hero-photo-col {
+  align-self: stretch;
+  border-left: 1px solid var(--line);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 64px 0 0 56px;
+}
+.hero-photo { width: 100%; aspect-ratio: 3/4; overflow: hidden; position: relative; }
+.hero-photo::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(192,123,72,.08), transparent 40%);
+  pointer-events: none;
+}
+.hero-photo img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: saturate(.95) contrast(1.03);
+  transition: transform .8s;
+}
+.hero-photo:hover img { transform: scale(1.03); }
+.hero-photo-label {
+  margin-top: 14px;
+  font-size: .62rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--stone);
+}
+
+
+/* SECTIONS */
+.section { padding: 120px 64px; }
+.section-header { margin-bottom: 72px; }
+.section-num {
+  font-size: .6rem; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--terra); display: block; margin-bottom: 14px;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(32px, 3.5vw, 52px);
+  font-weight: 400; color: var(--ink); line-height: 1.1;
+}
+.section-title em { font-style: italic; color: var(--lav); }
+.divider { height: 1px; background: var(--line); }
+
+/* ABOUT */
+.about {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--line);
+}
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+.about-text p { font-size: .93rem; color: var(--ink2); line-height: 1.95; margin-bottom: 20px; }
+.about-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+.chip {
+  font-size: .58rem; letter-spacing: .15em; text-transform: uppercase;
+  border: 1px solid var(--line); padding: 6px 14px;
+  color: var(--stone); background: var(--bg);
+  transition: border-color .2s, color .2s;
+}
+.chip:hover { border-color: var(--terra); color: var(--terra); }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); }
+.stat-cell {
+  padding: 38px 28px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  transition: background .3s;
+}
+.stat-cell:hover { background: var(--terra); }
+.stat-cell:hover .sn, .stat-cell:hover .sl { color: var(--bg); }
+.sn {
+  font-family: var(--serif); font-size: 2.8rem;
+  color: var(--terra); line-height: 1; transition: color .3s;
+}
+.sl {
+  font-size: .6rem; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--stone); margin-top: 8px; transition: color .3s;
+}
+
+/* EXPERIENCE */
+.experience { background: var(--bg); border-bottom: 1px solid var(--line); }
+.exp-row {
+  display: grid; grid-template-columns: 220px 1fr;
+  gap: 64px; padding: 64px 0;
+  border-bottom: 1px solid var(--line);
+  opacity: 0; transform: translateY(24px);
+  transition: opacity .65s ease, transform .65s ease;
+}
+.exp-row.vis { opacity: 1; transform: none; }
+.exp-co {
+  font-family: var(--serif); font-size: 1.25rem;
+  color: var(--ink); margin-bottom: 6px; line-height: 1.3;
+}
+.exp-role {
+  font-size: .62rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--terra); margin-bottom: 6px;
+}
+.exp-when { font-size: .75rem; color: var(--stone); line-height: 1.6; }
+.exp-body ul { list-style: none; margin-bottom: 28px; }
+.exp-body ul li {
+  font-size: .9rem; color: var(--ink2); line-height: 1.8;
+  padding: 11px 0 11px 22px; border-bottom: 1px solid var(--line);
+  position: relative;
+}
+.exp-body ul li::before {
+  content: '✦'; color: var(--terra); font-size: .55rem;
+  position: absolute; left: 0; top: 15px;
+}
+b.hl { color: var(--ink); font-weight: 500; }
+b.num { color: var(--terra); font-weight: 600; display: inline; }
+
+.exp-imgs { display: grid; gap: 3px; }
+.exp-imgs.g1 { grid-template-columns: 1fr; max-width: 660px; }
+.exp-imgs.g3 { grid-template-columns: repeat(3,1fr); }
+.exp-imgs.g4 { grid-template-columns: repeat(4,1fr); }
+.eimg { overflow: hidden; background: var(--bg3); }
+.eimg.tall { aspect-ratio: 3/4; }
+.eimg.wide { aspect-ratio: 16/9; }
+.eimg img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .7s, filter .5s;
+  filter: saturate(.85);
+}
+.eimg:hover img { transform: scale(1.05); filter: saturate(1.05); }
+
+/* EDUCATION */
+.education {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--line);
+}
+.edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--line); }
+.edu-card {
+  background: var(--bg); padding: 50px 44px; position: relative;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.edu-card.vis { opacity: 1; transform: none; }
+.edu-card:nth-child(1)::before { background: var(--terra); }
+.edu-card:nth-child(2)::before { background: var(--lav); }
+.edu-card:nth-child(3)::before { background: var(--sea); }
+.edu-card:nth-child(4)::before { background: var(--sage); }
+.edu-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.edu-yr {
+  font-size: .58rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--stone); margin-bottom: 18px;
+}
+.edu-school {
+  font-family: var(--serif); font-size: 1.45rem;
+  color: var(--ink); margin-bottom: 6px; line-height: 1.2;
+}
+.edu-deg {
+  font-size: .62rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--terra); margin-bottom: 6px;
+}
+.edu-loc { font-size: .8rem; color: var(--stone); }
+.edu-badge {
+  display: inline-block; margin-top: 16px;
+  font-size: .58rem; letter-spacing: .18em; text-transform: uppercase;
+  border: 1px solid var(--terra); padding: 4px 12px; color: var(--terra);
+}
+.edu-imgs { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 24px; }
+.edu-img { overflow: hidden; aspect-ratio: 4/3; background: var(--bg3); }
+.edu-img img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .65s, filter .5s;
+  filter: saturate(.85);
+}
+.edu-img:hover img { transform: scale(1.06); filter: saturate(1.05); }
+.edu-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: .62rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--lav); text-decoration: none; margin-top: 18px;
+  transition: gap .25s, color .2s;
+}
+.edu-link:hover { gap: 16px; color: var(--terra); }
+.edu-link::after { content: '→'; }
+
+/* SKILLS */
+.skills { background: var(--bg); border-bottom: 1px solid var(--line); }
+.skills-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; background: var(--line); margin-bottom: 2px; }
+.sk-col { background: var(--bg); padding: 44px 36px; transition: background .3s; }
+.sk-col:hover { background: var(--bg2); }
+.sk-col-title {
+  font-size: .6rem; letter-spacing: .25em; text-transform: uppercase;
+  padding-bottom: 16px; border-bottom: 1px solid var(--line); margin-bottom: 24px;
+}
+.sk-col:nth-child(1) .sk-col-title { color: var(--terra); }
+.sk-col:nth-child(2) .sk-col-title { color: var(--lav); }
+.sk-col:nth-child(3) .sk-col-title { color: var(--sea); }
+.sk-col ul { list-style: none; }
+.sk-col ul li {
+  font-size: .88rem; color: var(--ink2); padding: 8px 0;
+  border-bottom: 1px solid var(--bg3);
+  display: flex; align-items: center; gap: 10px;
+}
+.sk-col ul li::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--terra); flex-shrink: 0; }
+.sk-col ul li.dim { color: var(--stone); }
+.sk-col ul li.dim::before { background: var(--line); }
+.vol-block {
+  padding: 48px; background: var(--bg2); border: 1px solid var(--line);
+  display: grid; grid-template-columns: 200px 1fr; gap: 48px;
+}
+.vol-co { font-family: var(--serif); font-size: 1.2rem; color: var(--ink); margin-bottom: 6px; }
+.vol-role { font-size: .6rem; letter-spacing: .18em; text-transform: uppercase; color: var(--sage); margin-bottom: 6px; }
+.vol-when { font-size: .75rem; color: var(--stone); }
+.vol-desc { font-size: .9rem; color: var(--ink2); line-height: 1.9; }
+
+/* CONTACT */
+.contact {
+  background:
+    radial-gradient(ellipse 70% 60% at 10% 80%, rgba(192,123,72,.1) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 90% 20%, rgba(142,133,176,.08) 0%, transparent 55%),
+    var(--bg3);
+  border-bottom: 1px solid var(--line);
+  padding: 140px 64px;
+  display: grid; grid-template-columns: 1fr 420px; gap: 80px; align-items: end;
+}
+.contact-eyebrow {
+  font-size: .6rem; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--terra); margin-bottom: 22px;
+  display: flex; align-items: center; gap: 14px;
+}
+.contact-eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--terra); }
+.contact-h {
+  font-family: var(--serif);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 400; line-height: .92;
+  color: var(--ink); margin-bottom: 52px;
+}
+.contact-h em { font-style: italic; color: var(--lav); }
+.contact-list { display: flex; flex-direction: column; gap: 28px; margin-bottom: 44px; }
+.ci-label { font-size: .55rem; letter-spacing: .25em; text-transform: uppercase; color: var(--stone); margin-bottom: 5px; }
+.ci-val {
+  font-family: var(--serif); font-size: 1.1rem; color: var(--ink);
+  text-decoration: none; transition: color .25s;
+}
+a.ci-val:hover { color: var(--terra); }
+.linkedin-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: .65rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink); border: 1px solid var(--ink); padding: 13px 24px;
+  text-decoration: none; transition: background .25s, color .25s;
+}
+.linkedin-btn:hover { background: var(--ink); color: var(--bg); }
+.contact-photo-wrap { display: flex; flex-direction: column; gap: 16px; }
+.contact-photo { width: 100%; aspect-ratio: 4/5; overflow: hidden; }
+.contact-photo img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: saturate(.9) contrast(1.04);
+  transition: transform .8s, filter .6s;
+}
+.contact-photo:hover img { transform: scale(1.03); filter: saturate(1.05); }
+.contact-photo-caption {
+  font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--stone);
+}
+
+footer {
+  background: var(--ink); padding: 26px 64px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+footer p { font-size: .63rem; letter-spacing: .1em; color: rgba(255,255,255,.3); }
+.foot-sig { font-family: var(--serif); font-size: .95rem; color: rgba(255,255,255,.25); }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .75s ease, transform .75s ease; }
+.reveal.vis { opacity: 1; transform: none; }
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  nav, nav.stuck { padding: 18px 28px; }
+  .hero { grid-template-columns: 1fr; padding: 140px 28px 64px; }
+  .hero-photo-col { display: none; }
+  .section { padding: 80px 28px; }
+  .about-grid { grid-template-columns: 1fr; }
+  .exp-row { grid-template-columns: 1fr; gap: 20px; }
+  .edu-grid { grid-template-columns: 1fr; }
+  .skills-grid { grid-template-columns: 1fr; }
+  .vol-block { grid-template-columns: 1fr; gap: 20px; }
+  .contact { grid-template-columns: 1fr; }
+  .exp-imgs.g4 { grid-template-columns: repeat(2,1fr); }
+  .scroll-hint { display: none; }
+  footer { flex-direction: column; gap: 10px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<nav id="nav">
+  <a href="#" class="nav-name">Yiyu Zhang</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Work</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-content reveal">
+    <p class="hero-label">Marketing Portfolio</p>
+    <h1 class="hero-h1">Yiyu<br><em>Zhang</em></h1>
+    <p class="hero-mia">— MIA</p>
+    <div class="hero-dots"><span></span><span></span><span></span></div>
+    <p class="hero-tagline">Marketing graduate with experience in digital campaigns, B2B event marketing, and CRM strategy — bridging creativity and data across the UK and China.</p>
+    <a class="hero-btn" href="#experience">View Work <span>↓</span></a>
+  </div>
+  <div class="hero-photo-col">
+    <div class="hero-photo">
+      <img src="https://static.wixstatic.com/media/1da872_45f63bed34b7407895702cc906f61bc7~mv2.jpeg/v1/fill/w_490,h_653,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/1da872_45f63bed34b7407895702cc906f61bc7~mv2.jpeg" alt="Yiyu Zhang MIA">
+    </div>
+    <p class="hero-photo-label">London, United Kingdom</p>
+  </div>
+
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section class="section about" id="about">
+  <div class="section-header reveal">
+    <span class="section-num">01 — About</span>
+    <h2 class="section-title">A curious mind,<br><em>data-driven heart</em></h2>
+  </div>
+  <div class="about-grid">
+    <div class="reveal">
+      <div class="about-text">
+        <p>I'm a marketing enthusiast endlessly curious about how ideas turn into impact. With experience in both B2B and digital marketing across the UK and China, I balance data with creativity — crafting strategies, building campaigns, and analysing what works.</p>
+        <p>Skilled in Google Analytics, social media planning, and data-driven strategy, I bring a proactive and detail-oriented approach to every project. Bold campaigns that spark emotion — online, in galleries, or on city streets — are what inspire me most.</p>
+        <p>Beyond marketing, you'll find me with a camera chasing sunsets or sketching something that catches my eye. I believe good marketing, like good art, always connects people through story.</p>
+      </div>
+      <div class="about-tags">
+        <span class="chip">Digital Marketing</span>
+        <span class="chip">B2B Strategy</span>
+        <span class="chip">Content Creation</span>
+        <span class="chip">Social Media</span>
+        <span class="chip">Google Analytics</span>
+        <span class="chip">CRM Management</span>
+        <span class="chip">Luxury Marketing</span>
+        <span class="chip">Event Marketing</span>
+      </div>
+    </div>
+    <div class="reveal" style="transition-delay:.15s">
+      <div class="stat-grid">
+        <div class="stat-cell"><div class="sn">89%</div><div class="sl">Non-follower reach increase</div></div>
+        <div class="stat-cell"><div class="sn">18%</div><div class="sl">Facebook engagement rate</div></div>
+        <div class="stat-cell"><div class="sn">30K+</div><div class="sl">Global attendees served</div></div>
+        <div class="stat-cell"><div class="sn">916</div><div class="sl">Exhibitors coordinated</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<section class="section experience" id="experience">
+  <div class="section-header reveal">
+    <span class="section-num">02 — Experience</span>
+    <h2 class="section-title">Work that<br><em>moved the needle</em></h2>
+  </div>
+
+  <!-- Alibaba -->
+  <div class="exp-row">
+    <div class="exp-meta">
+      <div class="exp-co">Alibaba CoCreate</div>
+      <div class="exp-role">Event Support Volunteer</div>
+      <div class="exp-when">Nov 2025<br>London, UK</div>
+    </div>
+    <div class="exp-body">
+      <ul>
+        <li><b class="hl">Brand Activation</b> — Supported on-site brand activation and live event operations, ensuring consistent visual presentation during a high-profile commercial event.</li>
+        <li><b class="hl">Content Documentation</b> — Assisted with content capture and documentation to support post-event marketing review.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Dustid -->
+  <div class="exp-row">
+    <div class="exp-meta">
+      <div class="exp-co">Dustid</div>
+      <div class="exp-role">Digital Marketing Intern</div>
+      <div class="exp-when">Jul 2025 – Jan 2026<br>Manchester, UK</div>
+    </div>
+    <div class="exp-body">
+      <ul>
+        <li><b class="hl">Cross-Channel Content</b> — Coordinated content planning to ensure consistent brand messaging across all social media platforms.</li>
+        <li><b class="hl">Market Research</b> — Conducted competitor and market research to inform brand positioning and campaign optimisation.</li>
+        <li><b class="hl">Instagram Growth</b> — Planned and executed a 3-month campaign for an early-stage startup. Grew non-follower reach by <b class="num">89%</b> and achieved a Story CTR of <b class="num">3%</b> through structured content testing and weekly performance analysis.</li>
+      </ul>
+      <div class="exp-imgs g1">
+        <div class="eimg wide">
+          <img src="https://static.wixstatic.com/media/1da872_f3cb466410b74f3fb6c21c382e585454~mv2.png/v1/fill/w_756,h_408,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/1da872_f3cb466410b74f3fb6c21c382e585454~mv2.png" alt="Dustid campaign">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Durham -->
+  <div class="exp-row">
+    <div class="exp-meta">
+      <div class="exp-co">Durham Markets Co. Ltd</div>
+      <div class="exp-role">Marketing Intern</div>
+      <div class="exp-when">Mar – Jun 2025<br>Durham, UK</div>
+    </div>
+    <div class="exp-body">
+      <ul>
+        <li><b class="hl">Facebook Campaign</b> — Geo-targeted Mother's Day campaign achieving <b class="num">18% engagement rate</b> and 45 shares across 600 views.</li>
+        <li><b class="hl">Analytics</b> — Analysed audience behaviour using Google Analytics to identify engagement patterns and optimise weekly event content messaging.</li>
+        <li><b class="hl">Event Operations</b> — Supported weekly markets and themed events, liaising with vendors and assisting on-site operations.</li>
+      </ul>
+      <div class="exp-imgs g4">
+        <div class="eimg tall"><img src="https://static.wixstatic.com/media/1da872_3a8e505489f4439db54918d171058df2~mv2.png/v1/fill/w_286,h_335,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20251018220436_63_157.png" alt="Durham Markets"></div>
+        <div class="eimg tall"><img src="https://static.wixstatic.com/media/1da872_4afca0535b2a422e89974dbe6b6b728a~mv2.png/v1/crop/x_0,y_97,w_1200,h_1406/fill/w_286,h_335,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20251018220318_62_157.png" alt="Durham Markets"></div>
+        <div class="eimg tall"><img src="https://static.wixstatic.com/media/1da872_3453e3a67366405e87ca33ac0af1cb45~mv2.png/v1/crop/x_0,y_130,w_1200,h_1406/fill/w_286,h_335,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20251018220258_61_157.png" alt="Durham Markets"></div>
+        <div class="eimg tall"><img src="https://static.wixstatic.com/media/1da872_563d5259fbc7434292eedf8ef5d186ab~mv2.jpg/v1/crop/x_0,y_394,w_1267,h_1484/fill/w_286,h_335,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20251111014004_68_157.jpg" alt="Durham Markets"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RX Global -->
+  <div class="exp-row">
+    <div class="exp-meta">
+      <div class="exp-co">RX Global</div>
+      <div class="exp-role">Event & Marketing Assistant</div>
+      <div class="exp-when">Jun – Oct 2023<br>Shanghai, China</div>
+    </div>
+    <div class="exp-body">
+      <ul>
+        <li><b class="hl">Exhibitions</b> — Supported 2 flagship international high-tech exhibitions via integrated email and social campaigns with <b class="num">100% on-time delivery</b>.</li>
+        <li><b class="hl">CRM</b> — Maintained <b class="num">1,000+</b> Salesforce records to ensure database integrity and facilitate targeted re-engagement campaigns.</li>
+        <li><b class="hl">Stakeholder Coordination</b> — Liaised with <b class="num">916</b> exhibitors and 15+ forum coordinators for <b class="num">30,000+</b> global attendees.</li>
+      </ul>
+      <div class="exp-imgs g3">
+        <div class="eimg tall"><img src="https://static.wixstatic.com/media/1da872_78937b7ac6e5492f8077f24cc975fe00~mv2.webp/v1/fill/w_286,h_335,al_c,lg_1,q_80,enc_avif,quality_auto/wF3dFjDP7CzmTBTnWdEHzRyC2Zn6ca4N.webp" alt="RX Global"></div>
+        <div class="eimg tall"><img src="https://static.wixstatic.com/media/1da872_cd4001031d1248228a3714d64ef725cc~mv2.png/v1/crop/x_161,y_0,w_468,h_548/fill/w_286,h_335,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260122125104_81_157.png" alt="RX Global"></div>
+        <div class="eimg tall"><img src="https://static.wixstatic.com/media/1da872_634dce9d6b3d4ca0887a26f6b552812d~mv2.jpg/v1/fill/w_286,h_335,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/40f53b9cbd003bbe6ff13a1fdb8057ba_JPG.jpg" alt="RX Global"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EDUCATION -->
+<section class="section education" id="education">
+  <div class="section-header reveal">
+    <span class="section-num">03 — Education</span>
+    <h2 class="section-title">Academic<br><em>foundation</em></h2>
+  </div>
+  <div class="edu-grid">
+    <div class="edu-card reveal">
+      <div class="edu-yr">Sep 2024 – Jan 2026</div>
+      <div class="edu-school">Durham University</div>
+      <div class="edu-deg">MSc Marketing</div>
+      <div class="edu-loc">Durham, UK</div>
+      <span class="edu-badge">Distinction</span>
+    </div>
+    <div class="edu-card reveal" style="transition-delay:.1s">
+      <div class="edu-yr">Jun – Jul 2025</div>
+      <div class="edu-school">EDHEC Business School</div>
+      <div class="edu-deg">Summer School — Luxury Marketing</div>
+      <div class="edu-loc">Nice, France · Fine Perfumes & Luxury Beauty</div>
+      <div class="edu-imgs">
+        <div class="edu-img"><img src="https://static.wixstatic.com/media/1da872_b20611b819f24d2b86806aee0baafaf5~mv2.jpg/v1/fill/w_286,h_335,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20251018171442_54_157.jpg" alt="Atelier des Ors"></div>
+        <div class="edu-img"><img src="https://static.wixstatic.com/media/1da872_a6d92e2412424058819416588a1996ef~mv2.jpg/v1/crop/x_0,y_104,w_1280,h_1499/fill/w_286,h_335,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20251018171447_56_157.jpg" alt="Atelier des Ors 2"></div>
+        <div class="edu-img"><img src="https://static.wixstatic.com/media/1da872_a76c379b0fe845aa90bc38afb51f6923~mv2.webp/v1/fill/w_286,h_335,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Atelier-des-Ors-Riviera-Lazuli-Eau-de-Parfum-Ad-1.webp" alt="Atelier des Ors brand"></div>
+      </div>
+      <a class="edu-link" href="https://www.canva.com/design/DAGr1C9-m4Q/SOrWdgTpjupCP47PrxuSAQ/view?utm_content=DAGr1C9-m4Q&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hc022e9c08e" target="_blank">View Project — Atelier des Ors</a>
+    </div>
+    <div class="edu-card reveal" style="transition-delay:.15s">
+      <div class="edu-yr">Sep 2020 – Jun 2024</div>
+      <div class="edu-school">Shanghai Univ. of Int'l Business & Economics</div>
+      <div class="edu-deg">BA English (International Business)</div>
+      <div class="edu-loc">Shanghai, China</div>
+      <span class="edu-badge">GPA 3.72 / 4.0</span>
+    </div>
+    <div class="edu-card reveal" style="transition-delay:.2s">
+      <div class="edu-yr">Sep 2020 – Jun 2023</div>
+      <div class="edu-school">University of Central Lancashire</div>
+      <div class="edu-deg">BA English for International Business</div>
+      <div class="edu-loc">Lancashire, UK</div>
+      <span class="edu-badge">Upper Second Class</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section class="section skills" id="skills">
+  <div class="section-header reveal">
+    <span class="section-num">04 — Skills</span>
+    <h2 class="section-title">Tools &<br><em>capabilities</em></h2>
+  </div>
+  <div class="skills-grid reveal">
+    <div class="sk-col">
+      <div class="sk-col-title">Analytics & Data</div>
+      <ul>
+        <li>Google Analytics</li>
+        <li>Looker Studio</li>
+        <li>Excel (Advanced)</li>
+        <li>SPSS</li>
+        <li class="dim">HubSpot (Familiar)</li>
+      </ul>
+    </div>
+    <div class="sk-col">
+      <div class="sk-col-title">Social & CRM</div>
+      <ul>
+        <li>Salesforce</li>
+        <li>Meta Business Suite</li>
+        <li class="dim">Sprinklr (Familiar)</li>
+        <li class="dim">Clay (Familiar)</li>
+        <li class="dim">JIRA (Familiar)</li>
+      </ul>
+    </div>
+    <div class="sk-col">
+      <div class="sk-col-title">Design & Web</div>
+      <ul>
+        <li>Canva</li>
+        <li>Figma</li>
+        <li>WordPress</li>
+      </ul>
+    </div>
+  </div>
+  <div class="vol-block reveal" style="margin-top:2px;transition-delay:.1s">
+    <div>
+      <div class="vol-co">Girls Friendly Society</div>
+      <div class="vol-role">Volunteer</div>
+      <div class="vol-when">Mar – Jun 2025</div>
+    </div>
+    <p class="vol-desc">Supported weekly youth engagement sessions at GFS, leading creative activities — arts and crafts, card-making, and cooking workshops — for young girls while managing session setup, participant guidance, and coordination.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="reveal">
+    <p class="contact-eyebrow">05 — Contact</p>
+    <h2 class="contact-h">Let's make<br>something<br><em>meaningful</em></h2>
+    <div class="contact-list">
+      <div>
+        <div class="ci-label">Email</div>
+        <a class="ci-val" href="/cdn-cgi/l/email-protection#166f7f6f63387b7f776c7e77787156717b777f7a3875797b"><span class="__cf_email__" data-cfemail="126b7b6b673c7f7b73687a737c7552757f737b7e3c717d7f">[email&#160;protected]</span></a>
+      </div>
+      <div>
+        <div class="ci-label">Phone</div>
+        <a class="ci-val" href="tel:+4407303097709">+44 07303 097 709</a>
+      </div>
+      <div>
+        <div class="ci-label">Location</div>
+        <span class="ci-val">London, United Kingdom</span>
+      </div>
+    </div>
+    <a class="linkedin-btn" href="https://linkedin.com/in/mia-yiyu-zhang-187a07330" target="_blank">LinkedIn Profile ↗</a>
+  </div>
+  <div class="contact-photo-wrap reveal" style="transition-delay:.15s">
+    <div class="contact-photo">
+      <img src="https://static.wixstatic.com/media/1da872_4b36a3cfc5c24cbca6b4dd6385399fb1~mv2.jpg/v1/fill/w_490,h_653,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/1da872_4b36a3cfc5c24cbca6b4dd6385399fb1~mv2.jpg" alt="Yiyu Zhang">
+    </div>
+    <p class="contact-photo-caption">Always open to new opportunities</p>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Yiyu Zhang — All rights reserved</p>
+  <span class="foot-sig">MIA</span>
+  <p>Marketing Portfolio · London</p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  var cur = document.getElementById('cur');
+  var ring = document.getElementById('cur-ring');
+  var mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', function(e){ mx=e.clientX; my=e.clientY; });
+  function loop(){
+    cur.style.left=mx+'px'; cur.style.top=my+'px';
+    rx+=(mx-rx)*0.13; ry+=(my-ry)*0.13;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    requestAnimationFrame(loop);
+  }
+  loop();
+  document.querySelectorAll('a,button').forEach(function(el){
+    el.addEventListener('mouseenter',function(){
+      cur.style.transform='translate(-50%,-50%) scale(3)';
+      ring.style.transform='translate(-50%,-50%) scale(0)';
+    });
+    el.addEventListener('mouseleave',function(){
+      cur.style.transform='translate(-50%,-50%) scale(1)';
+      ring.style.transform='translate(-50%,-50%) scale(1)';
+    });
+  });
+
+  var nav = document.getElementById('nav');
+  window.addEventListener('scroll', function(){ nav.classList.toggle('stuck', window.scrollY>60); });
+
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('vis'); });
+  }, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal,.exp-row,.edu-card').forEach(function(el){ obs.observe(el); });
+
+  setTimeout(function(){
+    document.querySelectorAll('.hero .reveal').forEach(function(el){ el.classList.add('vis'); });
+  }, 80);
+</script>
+</body>
+</html>
